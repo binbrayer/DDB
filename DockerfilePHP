@@ -1,0 +1,8 @@
+﻿FROM php:7.0-fpm
+
+RUN useradd 1000
+USER 1000
+
+WORKDIR /var/www
+
+CMD ["php-fpm"]

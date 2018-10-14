@@ -1,0 +1,7 @@
+* * * * * date >> /var/log/cron.log 2>&1
+# * * * * * cd / && /usr/bin/python /backup.py --hourly 24
+# * * * * * cd / && /usr/bin/python /backup.py --daily 7
+* * * * * cd / && /usr/bin/python /backup.py --weekly 4
+# * * * * * cd / && /usr/bin/python /backup.py --monthly 12
+# 5 4 * * * cd / && /usr/bin/python /backup.py --hourly 24 >> /var/log/MySQLDumps.log 2>&1
+# DO NOT REMOVE THIS LINE

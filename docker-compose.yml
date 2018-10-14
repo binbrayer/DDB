@@ -1,0 +1,68 @@
+version: '3.3'
+services:
+  cron:
+    container_name: ddb_cron
+    build:
+      context: .
+      dockerfile: DockerfileCron
+    privileged: true
+    working_dir: /
+    volumes:
+      - ./var/log:/var/log/
+      - ./backup.py:/backup.py
+      - ./backups:/backups/
+      - /var/run/docker.sock:/var/run/docker.sock
+    links:
+      - mysql
+      - php
+      - nginx
+
+
+  nginx:
+    container_name: ddb_nginx
+    image: nginx:latest
+    user: ${CURRENT_UID}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./etc/nginx/conf.d:/etc/nginx/conf.d
+      - ./www:/var/www
+    links:
+      - php
+
+
+  mysql:
+    container_name: ddb_mysql
+    build:
+      context: .
+      dockerfile: DockerfileMySQL
+    volumes:
+      - ./var/lib/mysql/:/var/lib/mysql/
+      - ./etc/mysql/my.cnf:/etc/mysql/my.cnf
+      - ./backups/:/backups/
+
+
+  php:
+    container_name: ddb_php
+    build:
+      context: .
+      dockerfile: DockerfilePHP
+    volumes:
+      - ./www:/var/www
+      - ./etc/php/php.ini:/usr/local/etc/php/conf.d/40-custom.ini
+    links:
+      - mysql
+
+
+  # phpmyadmin:
+  #   container_name: ddb_phpmyadmin
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: phpmyadmin
+  #   environment:
+  #     - PMA_ARBITRARY=1
+  #   ports:
+  #     - 89:80
+  #   links:
+  #     - mysql:db
+  

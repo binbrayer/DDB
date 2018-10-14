@@ -1,0 +1,13 @@
+FROM docker:stable
+
+RUN apk add --update \
+    python \
+    python-dev \
+    py-pip \
+    build-base
+
+COPY crontab /etc/crontabs/root
+RUN chmod 0600 /etc/crontabs/root
+WORKDIR /
+
+CMD ["crond", "-fS"]
